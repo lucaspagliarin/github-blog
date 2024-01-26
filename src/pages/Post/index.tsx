@@ -14,7 +14,7 @@ import {
   PostInfos,
 } from './styles'
 import { getIssue, issueDetailResponse } from '../../api/api'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
@@ -28,15 +28,15 @@ export function Post() {
 
   const { id } = useParams()
 
-  const fetchIssue = async () => {
+  const fetchIssue = useCallback(async () => {
     const data = await getIssue(id)
 
     setIssue(data)
-  }
+  }, [id])
 
   useEffect(() => {
     fetchIssue()
-  }, [])
+  }, [fetchIssue])
 
   return (
     <PostContainer>
