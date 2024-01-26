@@ -13,8 +13,20 @@ import {
   PostHeaderLinks,
   PostInfos,
 } from './styles'
+// import { getIssue, issueDetailResponse } from '../../api/api'
+// import { useState } from 'react'
 
 export function Post() {
+  // const [issue, setIssue] = useState<issueDetailResponse>(
+  //   {} as issueDetailResponse,
+  // )
+
+  // const fetchIssue = async () => {
+  //   const response = await getIssue()
+
+  //   setIssues(response)
+  // }
+
   return (
     <PostContainer>
       <PostHeaderContainer>
