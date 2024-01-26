@@ -7,5 +7,5 @@ export const HeaderContainer = styled.div`
   align-items: center;
   justify-content: space-between;
 
-  background-color: ${(props) => props.theme['base-profile']};
+  background-color: ${(props) => props.theme['base-post']};
 `
