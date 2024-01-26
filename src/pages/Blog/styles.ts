@@ -1,4 +1,10 @@
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
+
+export const StyledLink = styled(Link)`
+  text-decoration: inherit;
+  color: inherit;
+`
 
 export const BlogContainer = styled.div`
   width: 100%;

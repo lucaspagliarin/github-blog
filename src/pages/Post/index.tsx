@@ -13,66 +13,73 @@ import {
   PostHeaderLinks,
   PostInfos,
 } from './styles'
-// import { getIssue, issueDetailResponse } from '../../api/api'
-// import { useState } from 'react'
+import { getIssue, issueDetailResponse } from '../../api/api'
+import { useEffect, useState } from 'react'
+import { Link, useParams } from 'react-router-dom'
+import { formatDistanceToNow } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
+import Markdown from 'react-markdown'
+import gfm from 'remark-gfm'
 
 export function Post() {
-  // const [issue, setIssue] = useState<issueDetailResponse>(
-  //   {} as issueDetailResponse,
-  // )
+  const [issue, setIssue] = useState<issueDetailResponse>(
+    {} as issueDetailResponse,
+  )
 
-  // const fetchIssue = async () => {
-  //   const response = await getIssue()
+  const { id } = useParams()
 
-  //   setIssues(response)
-  // }
+  const fetchIssue = async () => {
+    const data = await getIssue(id)
+
+    setIssue(data)
+  }
+
+  useEffect(() => {
+    fetchIssue()
+  }, [])
 
   return (
     <PostContainer>
       <PostHeaderContainer>
         <PostHeaderLinks>
-          <a href="#">
+          <Link to="/">
             <FontAwesomeIcon icon={faChevronLeft} />
             <span>VOLTAR</span>
-          </a>
-          <a href="#">
+          </Link>
+          <a href={issue.html_url}>
             <span>VER NO GITHUB</span>
             <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
           </a>
         </PostHeaderLinks>
-        <h1>Javascript data types and data structures</h1>
+        <h1>{issue.title}</h1>
         <PostInfos>
           <div>
             <FontAwesomeIcon icon={faGithub} />
-            <span>lucaspagliarin</span>
+            <span>{issue.user?.login}</span>
           </div>
 
           <div>
             <FontAwesomeIcon icon={faCalendarDay} />
-            <span>Há 1 dia</span>
+            <span>
+              {issue.created_at &&
+                formatDistanceToNow(new Date(issue.created_at), {
+                  locale: ptBR,
+                  addSuffix: true,
+                })}
+            </span>
           </div>
 
           <div>
             <FontAwesomeIcon icon={faComment} />
-            <span>5 comentários</span>
+            <span>
+              {issue.comments}{' '}
+              {issue.comments === 1 ? 'comentário' : 'comentários'}
+            </span>
           </div>
         </PostInfos>
       </PostHeaderContainer>
       <PostContent>
-        <p>
-          Programming languages all have built-in data structures, but these
-          often differ from one language to another. This article attempts to
-          list the built-in data structures available in JavaScript and what
-          properties they have. These can be used to build other data
-          structures. Wherever possible, comparisons with other languages are
-          drawn.
-        </p>
-        <p>
-          Dynamic typing JavaScript is a loosely typed and dynamic language.
-          Variables in JavaScript are not directly associated with any
-          particular value type, and any variable can be assigned (and
-          re-assigned) values of all types:
-        </p>
+        <Markdown remarkPlugins={[gfm]}>{issue.body}</Markdown>
       </PostContent>
     </PostContainer>
   )

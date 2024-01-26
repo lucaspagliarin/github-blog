@@ -7,5 +7,3 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <App />
   </React.StrictMode>,
 )
-
-// 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

@@ -26,7 +26,7 @@ export async function getIssuesList(): Promise<listReposIssuesResponse> {
   return response.data
 }
 
-export async function getIssue(id: number): Promise<listReposIssuesResponse> {
+export async function getIssue(id?: string): Promise<issueDetailResponse> {
   const { repoName, owner } = config
   const response = await api.request(
     `GET /repos/${owner}/${repoName}/issues/${id}`,
