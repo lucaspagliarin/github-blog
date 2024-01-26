@@ -7,7 +7,9 @@ import { getIssuesList, listReposIssuesResponse } from '../../api/api'
 import { formatParagraph } from '../../utils/textFormatter'
 
 export function Blog() {
-  const [issues, setIssues] = useState<listReposIssuesResponse[]>([])
+  const [issues, setIssues] = useState<listReposIssuesResponse>(
+    [] as listReposIssuesResponse,
+  )
 
   const fetchIssuesList = async () => {
     const response = await getIssuesList()

@@ -13,7 +13,7 @@ const api = new Octokit({
   auth: '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',
 })
 
-export async function getIssuesList(): Promise<listReposIssuesResponse[]> {
+export async function getIssuesList(): Promise<listReposIssuesResponse> {
   const { repoName, owner } = config
   const response = await api.request(`GET /repos/${owner}/${repoName}/issues`, {
     owner,
