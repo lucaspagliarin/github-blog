@@ -1,21 +1,6 @@
 import styled from 'styled-components'
 
 export const SearchFormContainer = styled.form`
-  div {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  h1 {
-    font-size: 1.175rem;
-  }
-
-  span {
-    font-size: 0.875rem;
-    color: ${(props) => props.theme['base-span']};
-  }
-
   input {
     display: flex;
     width: 100%;

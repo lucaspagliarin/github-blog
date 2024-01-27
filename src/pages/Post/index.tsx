@@ -13,7 +13,7 @@ import {
   PostHeaderLinks,
   PostInfos,
 } from './styles'
-import { getIssue, issueDetailResponse } from '../../api/api'
+import { getIssue } from '../../api/github'
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { formatDistanceToNow } from 'date-fns'
@@ -21,17 +21,33 @@ import { ptBR } from 'date-fns/locale'
 import Markdown from 'react-markdown'
 import gfm from 'remark-gfm'
 
+interface IssueDetails {
+  html_url: string
+  owner?: string
+  title: string
+  body?: string | null
+  comments: number
+  created_at: string
+}
+
 export function Post() {
-  const [issue, setIssue] = useState<issueDetailResponse>(
-    {} as issueDetailResponse,
-  )
+  const [issue, setIssue] = useState<IssueDetails>({} as IssueDetails)
 
   const { id } = useParams()
 
   const fetchIssue = useCallback(async () => {
     const data = await getIssue(id)
 
-    setIssue(data)
+    const newIssue: IssueDetails = {
+      html_url: data.html_url,
+      owner: data.user?.login,
+      title: data.title,
+      body: data.body,
+      comments: data.comments,
+      created_at: data.created_at,
+    }
+
+    setIssue(newIssue)
   }, [id])
 
   useEffect(() => {
@@ -55,7 +71,7 @@ export function Post() {
         <PostInfos>
           <div>
             <FontAwesomeIcon icon={faGithub} />
-            <span>{issue.user?.login}</span>
+            <span>{issue.owner}</span>
           </div>
 
           <div>

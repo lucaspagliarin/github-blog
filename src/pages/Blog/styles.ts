@@ -14,6 +14,21 @@ export const BlogContainer = styled.div`
   margin-top: 4.5rem;
 `
 
+export const FormHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  h1 {
+    font-size: 1.175rem;
+  }
+
+  span {
+    font-size: 0.875rem;
+    color: ${(props) => props.theme['base-span']};
+  }
+`
+
 export const PostListContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
