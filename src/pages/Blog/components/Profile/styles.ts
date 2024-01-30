@@ -16,6 +16,10 @@ export const ProfileContainer = styled.div`
 
   background-color: ${(props) => props.theme['base-profile']};
 
+  div {
+    width: 100%;
+  }
+
   img {
     width: 9.25rem;
     border-radius: 8px;

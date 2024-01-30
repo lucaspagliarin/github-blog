@@ -10,21 +10,14 @@ export type listReposIssuesResponse =
 export type issueDetailResponse =
   Endpoints['GET /repos/{owner}/{repo}/issues/{issue_number}']['response']['data']
 
+export type userDataResponse =
+  Endpoints['GET /users/{username}']['response']['data']
+
 const config = {
   repo: 'github-blog',
   owner: 'lucaspagliarin',
   full: 'lucaspagliarin/github-blog',
 }
-
-// export async function getIssuesList(): Promise<listReposIssuesResponse> {
-//   const { repo, owner } = config
-//   const response = await api.request(`GET /repos/${owner}/${repo}/issues`, {
-//     owner,
-//     repo,
-//   })
-
-//   return response.data
-// }
 
 export async function searchIssuesList(
   text: string,
@@ -46,6 +39,15 @@ export async function getIssue(id?: string): Promise<issueDetailResponse> {
       issue_number: id,
     },
   )
+
+  return response.data
+}
+
+export async function getUser(): Promise<userDataResponse> {
+  const { owner } = config
+  const response = await api.request(`GET /users/${owner}`, {
+    username: owner,
+  })
 
   return response.data
 }
