@@ -1,11 +1,12 @@
-import React, { ChangeEvent, useCallback, useEffect, useState } from 'react'
+import React, { ChangeEvent, useCallback, useState } from 'react'
 import { searchIssuesList } from '../../../../api/github'
-import debounce from 'lodash.debounce'
+
 import { SearchFormContainer } from './styles'
 import { IssueProps } from '../..'
 import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+import { useTimer } from 'react-timer-hook'
 
 interface SearchFormProps {
   setIssues: React.Dispatch<React.SetStateAction<IssueProps[]>>
@@ -19,13 +20,9 @@ type SearchFormInputs = z.infer<typeof searchFormSchema>
 
 export function SearchForm(props: SearchFormProps) {
   const { setIssues } = props
-  const [search, setSearch] = useState('')
+  const [searchValue, setSearchValue] = useState('')
 
-  const {
-    register,
-    handleSubmit,
-    formState: { isSubmitting },
-  } = useForm<SearchFormInputs>({
+  const { register, handleSubmit } = useForm<SearchFormInputs>({
     resolver: zodResolver(searchFormSchema),
   })
 
@@ -35,20 +32,10 @@ export function SearchForm(props: SearchFormProps) {
 
   const { onChange, ...restSearchProps } = register('query')
 
-  const debounceSearch = debounce((v) => setSearch(v), 300)
-
-  const handleInputChange = useCallback(
-    async (event: ChangeEvent<HTMLInputElement>) => {
-      const { value } = event.target
-
-      debounceSearch(value)
-      onChange(event)
-    },
-    [debounceSearch, onChange],
-  )
-
   const handleSearch = useCallback(async () => {
-    const data = await searchIssuesList(search)
+    const data = await searchIssuesList(searchValue)
+
+    console.log(data)
 
     const newIssuesList: IssueProps[] = data.items.map((issue) => {
       const { number, title, body } = issue
@@ -61,20 +48,39 @@ export function SearchForm(props: SearchFormProps) {
     })
 
     setIssues(newIssuesList)
-  }, [setIssues, search])
+  }, [setIssues, searchValue])
 
-  useEffect(() => {
-    if (!isSubmitting) {
-      handleSearch()
-    }
-  }, [isSubmitting, search, handleSearch])
+  // Timer para fazer a requisição a API
+
+  const time = new Date()
+  time.setSeconds(time.getSeconds() + 0.5)
+  const { restart } = useTimer({
+    expiryTimestamp: time,
+    onExpire: handleSearch,
+  })
+
+  const restartTimer = useCallback(() => {
+    const time = new Date()
+    time.setSeconds(time.getSeconds() + 0.5)
+    restart(time)
+  }, [restart])
+
+  const handleInputChange = useCallback(
+    async (event: ChangeEvent<HTMLInputElement>) => {
+      const { value } = event.target
+      setSearchValue(value)
+      onChange(event)
+      restartTimer()
+    },
+    [onChange, restartTimer],
+  )
 
   return (
     <SearchFormContainer onSubmit={onSubmit}>
       <input
         type="text"
         placeholder="Buscar conteúdo"
-        value={search}
+        value={searchValue}
         onChange={handleInputChange}
         {...restSearchProps}
       />

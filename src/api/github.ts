@@ -32,7 +32,7 @@ export async function searchIssuesList(
   const { full } = config
   const queryString = 'q=' + encodeURIComponent(`${text} repo:${full}`)
   const response = await api.request(`GET /search/issues?${queryString}`)
-
+  console.log(queryString)
   return response.data
 }
 
